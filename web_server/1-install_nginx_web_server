@@ -1,15 +1,25 @@
 #!/usr/bin/env bash
-# Install nginx, configure it to listen on port 80, and serve a page containing "Holberton School"
+# Install nginx, configure it to serve "Holberton School for the win!" on port 80 and restart without systemctl
 
-# Update package list and install nginx with -y to auto-confirm
+# Update package list and install nginx
 apt-get update -y
 apt-get install -y nginx
 
-# Create a custom index.html file with the required content
+# Overwrite default index.html with the required content
 echo "Holberton School for the win!" > /var/www/html/index.html
 
-# Ensure nginx listens on port 80 (default behavior, but just to be sure)
-# The default config listens on port 80, so no need to change anything unless modified
+# Make sure permissions are correct
+chown www-data:www-data /var/www/html/index.html
+chmod 644 /var/www/html/index.html
 
-# Restart nginx without systemctl: use service command instead
-service nginx restart
+# Start nginx service (use service command since systemctl is not allowed)
+service nginx start
+
+# In case nginx is already running, reload configuration
+service nginx reload || service nginx restart
+
+# Check nginx status, print errors if any (optional)
+if ! service nginx status > /dev/null; then
+    echo "Nginx failed to start"
+    exit 1
+fi
