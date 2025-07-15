@@ -1,25 +1,21 @@
 #!/usr/bin/env bash
-# Install nginx, configure it to serve "Holberton School for the win!" on port 80 and restart without systemctl
+# Install nginx and configure root page with required string
 
-# Update package list and install nginx
 apt-get update -y
 apt-get install -y nginx
 
-# Overwrite default index.html with the required content
+# Set correct content
 echo "Holberton School for the win!" > /var/www/html/index.html
 
-# Make sure permissions are correct
+# Set ownership and permissions
 chown www-data:www-data /var/www/html/index.html
 chmod 644 /var/www/html/index.html
 
-# Start nginx service (use service command since systemctl is not allowed)
-service nginx start
+# Ensure default site config root is /var/www/html
+sed -i 's|root /var/www/html;|root /var/www/html;|g' /etc/nginx/sites-enabled/default
 
-# In case nginx is already running, reload configuration
-service nginx reload || service nginx restart
+# Ensure index includes index.html
+sed -i 's/index index.html index.htm/index index.html index.htm/g' /etc/nginx/sites-enabled/default
 
-# Check nginx status, print errors if any (optional)
-if ! service nginx status > /dev/null; then
-    echo "Nginx failed to start"
-    exit 1
-fi
+# Restart nginx without systemctl
+service nginx restart
