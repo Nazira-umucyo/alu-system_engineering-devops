@@ -1,34 +1,21 @@
 #!/usr/bin/env bash
 # Configure Nginx to redirect /redirect_me permanently to a target URL on a fresh Ubuntu machine
 
-# Exit immediately on error
 set -e
 
-# Update package lists and install nginx
 apt-get update -y
 apt-get install -y nginx
 
-# Disable systemctl usage per requirements: stop and start nginx using service command
 service nginx stop || true
 
-# Backup original default config file
 cp /etc/nginx/sites-available/default /etc/nginx/sites-available/default.bak
 
-# Use sed to replace the server block's location /redirect_me with a 301 redirect block
-# We'll replace the entire location /redirect_me block or add it if missing
-
-# First, remove existing location /redirect_me block (if any) — lines between 'location /redirect_me {' and '}'
+# Remove existing location /redirect_me block (from location line to closing brace)
 sed -i '/location \/redirect_me {/,/}/d' /etc/nginx/sites-available/default
 
-# Now add the new location block right before the last closing bracket of server block
-# Insert these lines before the last closing curly brace of the server block
-sed -i '/^}/i \
-\tlocation /redirect_me {\
-\n\t\treturn 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;\
-\n\t}' /etc/nginx/sites-available/default
+# Insert the new location block before the last closing brace of the server block
+sed -i '/^}/i location /redirect_me {\n\treturn 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;\n}' /etc/nginx/sites-available/default
 
-# Start nginx again
 service nginx start
 
-# Wait a moment to ensure nginx is running
 sleep 2
