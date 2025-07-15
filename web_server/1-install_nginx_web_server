@@ -1,14 +1,15 @@
 #!/usr/bin/env bash
-# Install nginx, configure default site to serve required content, and restart nginx
+# Install nginx and configure it to serve "Holberton School for the win!" on port 80
 
 apt-get update -y
 apt-get install -y nginx
 
-sed -i 's|root .*;|root /var/www/html;|' /etc/nginx/sites-enabled/default
-sed -i 's/index .*;/index index.html index.htm;/' /etc/nginx/sites-enabled/default
-
+# Create the index.html with the required content in nginx root directory
 echo "Holberton School for the win!" > /var/www/html/index.html
+
+# Set ownership and permissions so nginx can read it
 chown www-data:www-data /var/www/html/index.html
 chmod 644 /var/www/html/index.html
 
+# Restart nginx without using systemctl
 service nginx restart
