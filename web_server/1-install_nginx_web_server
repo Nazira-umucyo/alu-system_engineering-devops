@@ -1,11 +1,15 @@
 #!/usr/bin/env bash
-# Install nginx, set up index.html, ensure nginx serves correct content
+# Install nginx, ensure it serves "Holberton School for the win!" on root, and restart nginx
 
 apt-get update -y
 apt-get install -y nginx
 
+# Overwrite the default index.html with the required content
 echo "Holberton School for the win!" > /var/www/html/index.html
+
+# Fix permissions so nginx can read it
 chown www-data:www-data /var/www/html/index.html
 chmod 644 /var/www/html/index.html
 
+# Restart nginx (no systemctl)
 service nginx restart
