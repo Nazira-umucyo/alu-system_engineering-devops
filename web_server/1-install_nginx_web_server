@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# This script installs and configures nginx to serve a custom page
+# Install nginx and serve "Holberton School for the win!" on port 80
+
 apt-get update -y
 apt-get install -y nginx
 
