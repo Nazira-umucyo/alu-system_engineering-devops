@@ -1,10 +1,16 @@
 #!/usr/bin/env bash
-# Install nginx if not installed
+# Install nginx if not already installed
 apt-get update -y
 apt-get install -y nginx
 
-# Insert redirect block right after the 'listen 80 default_server;' line
-sed -i '/listen 80 default_server;/a location /redirect_me {\n\treturn 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;\n}' /etc/nginx/sites-available/default
+# Add redirect inside the main server block
+CONFIG="/etc/nginx/sites-available/default"
+if ! grep -q "/redirect_me" "$CONFIG"; then
+  sed -i "/server_name _;/a \\
+    location /redirect_me {\n\
+        return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;\n\
+    }" "$CONFIG"
+fi
 
-# Restart nginx using service command (not systemctl)
+# Restart Nginx using service
 service nginx restart
