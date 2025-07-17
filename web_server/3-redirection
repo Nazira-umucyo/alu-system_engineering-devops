@@ -1,17 +1,18 @@
 #!/usr/bin/env bash
-# Bash script to configure a 301 redirection for /redirect_me
+# Sets up a 301 redirect for /redirect_me on a new Ubuntu server
 
+# Exit immediately if any command fails
 set -e
 
-# Install Nginx
+# Install nginx if not already installed
 apt-get update -y
 apt-get install -y nginx
 
-# Add redirection in the default config
-CONFIG="/etc/nginx/sites-available/default"
+# Define config file
+NGINX_DEFAULT="/etc/nginx/sites-available/default"
 
-# Insert the redirect block inside the server block, above the last closing brace
-sed -i '/server_name _;/a \\n\tlocation /redirect_me {\n\t\treturn 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;\n\t}' "$CONFIG"
+# Insert the redirection block into the server block, after the 'listen' line
+sed -i "/listen 80 default_server;/a \\\n\tlocation /redirect_me {\n\t\treturn 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;\n\t}" "$NGINX_DEFAULT"
 
 # Restart nginx to apply changes
 service nginx restart
