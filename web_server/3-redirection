@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 # Install nginx if not installed
+<<<<<<< HEAD
 apt-get update -y
 apt-get install -y nginx
 
@@ -8,3 +9,13 @@ sed -i '/listen 80 default_server;/a location /redirect_me {\n\treturn 301 https
 
 # Restart nginx using service command (not systemctl)
 service nginx restart
+=======
+apt-get update
+apt-get install -y nginx
+
+# Create redirect config inside the server block
+sed -i "/^\s*server_name _;/a \\        location /redirect_me {\n            return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;\n        }" /etc/nginx/sites-available/default
+
+# Restart nginx to apply changes
+systemctl restart nginx
+>>>>>>> ab1ced4214346cd1569327ad7456d1f961f07707
