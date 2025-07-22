@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Install nginx and serve Holberton School message on the root page
+# Install nginx and set a custom root page with "Holberton School for the win!"
 
 apt-get update -y
 apt-get install -y nginx
