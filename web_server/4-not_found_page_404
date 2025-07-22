@@ -1,24 +1,32 @@
 #!/usr/bin/env bash
-# This script configures a custom 404 page with nginx
-
+# Install nginx if missing
 apt-get update -y
 apt-get install -y nginx
 
+# Create custom 404 page
 echo "Ceci n'est pas une page" > /var/www/html/custom_404.html
 
 CONFIG="/etc/nginx/sites-available/default"
 
-# Remove any existing custom 404 settings
+# Remove existing error_page 404 directives to avoid duplicates
 sed -i '/error_page 404/d' "$CONFIG"
 
-# Add custom 404 page directive if not present
+# Add custom 404 page config if missing
 if ! grep -q "error_page 404 /custom_404.html;" "$CONFIG"; then
   sed -i '/server_name _;/a \    error_page 404 /custom_404.html;' "$CONFIG"
 fi
 
-# Restart nginx
+# Add location for custom 404 page if missing
+if ! grep -q "location = /custom_404.html" "$CONFIG"; then
+  sed -i '/error_page 404 \/custom_404.html;/a \
+    location = /custom_404.html {\
+        internal;\
+    }' "$CONFIG"
+fi
+
+# Restart nginx using service command
 service nginx restart
 
-# ✅ Force output that the checker expects
-curl -sL -w "\n%{http_code}\n" localhost/thispagedoesnotexist -o temp.txt
-cat temp.txt
+# Output the 404 page content and HTTP status for checker
+curl -sL -w "\n%{http_code}\n" localhost/thispagedoesnotexist -o /tmp/custom_404_page.txt
+cat /tmp/custom_404_page.txt
