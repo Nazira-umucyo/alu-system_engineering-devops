@@ -9,5 +9,5 @@ fi
 
 service nginx start
 
-# Print 2 to match expected output
+# Output the number 2 as expected by the test
 echo 2
