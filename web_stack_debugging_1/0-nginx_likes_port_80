@@ -1,13 +1,15 @@
 #!/usr/bin/env bash
-# Starts Nginx so it listens on port 80
+# Fixes Nginx to listen on port 80 and ensures it's running
 
+# Install nginx if not already installed
 apt-get update -y
+apt-get install -y nginx
 
-if ! command -v nginx > /dev/null 2>&1; then
-    apt-get install -y nginx
+# Stop Apache if running (it might be blocking port 80)
+if pgrep apache2; then
+    service apache2 stop
+    apt-get remove -y apache2
 fi
 
+# Start Nginx
 service nginx start
-
-# Output the number 2 as expected by the test
-echo 2
