@@ -13,3 +13,9 @@ fi
 
 # Start Nginx
 service nginx start
+
+# Wait a bit to ensure nginx starts fully
+sleep 1
+
+# Count number of processes listening on port 80
+ss -ltnp | grep ':80' | wc -l
