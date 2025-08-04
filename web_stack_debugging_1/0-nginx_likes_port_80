@@ -1,21 +1,17 @@
 #!/usr/bin/env bash
-# Nginx to listen on port 80 and ensures it's running
+# Fixes nginx to listen on port 80 and prints the count of listeners on port 80
 
-# Install nginx if not already installed
-apt-get update -y
-apt-get install -y nginx
+apt-get update -qq
+apt-get install -y nginx > /dev/null 2>&1
 
-# Stop Apache if running (it might be blocking port 80)
-if pgrep apache2; then
-    service apache2 stop
-    apt-get remove -y apache2
+if pgrep apache2 >/dev/null; then
+    service apache2 stop > /dev/null 2>&1
+    apt-get remove -y apache2 > /dev/null 2>&1
 fi
 
-# Start Nginx
-service nginx start
+service nginx start > /dev/null 2>&1
 
-# Wait a moment to ensure Nginx is fully started
 sleep 1
 
-# Count processes listening on port 80
+# Print number of processes listening on port 80
 ss -ltnp | grep -c ':80'
