@@ -1,5 +1,5 @@
-#!/usr/bin/env bash
-# Fixes Nginx to listen on port 80 and ensures it's running
+
+# Nginx to listen on port 80 and ensures it's running
 
 # Install nginx if not already installed
 apt-get update -y
@@ -14,8 +14,8 @@ fi
 # Start Nginx
 service nginx start
 
-# Wait a bit to ensure nginx starts fully
+# Wait a moment to ensure Nginx is fully started
 sleep 1
 
-# Count number of processes listening on port 80
-ss -ltnp | grep ':80' | wc -l
+# Count processes listening on port 80
+ss -ltnp | grep -c ':80'
