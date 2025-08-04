@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 # Nginx to listen on port 80 and ensures it's running
 
 # Install nginx if not already installed
